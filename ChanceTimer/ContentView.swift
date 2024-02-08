@@ -56,7 +56,11 @@ struct ContentView: View {
                             .onChange(of: startTime) {
                                 startTime = Double(Int(startTime.rounded()))
                                 if startTime >= endTime {
-                                    startTime = max(endTime - 1, 1)
+                                    if (endTime == 180) {
+                                        startTime = 179
+                                    } else {
+                                        endTime = startTime + 1
+                                    }
                                 }
                             }
                         Text("180")
@@ -76,7 +80,11 @@ struct ContentView: View {
                             .onChange(of: endTime) {
                                 endTime = Double(Int(endTime.rounded()))
                                 if endTime <= startTime {
-                                    endTime = min(startTime + 1, 180)
+                                    if (startTime == 1) {
+                                        endTime = 2
+                                    } else {
+                                        startTime = endTime - 1
+                                    }
                                 }
                             }
                     }
