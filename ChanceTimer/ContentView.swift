@@ -35,7 +35,7 @@ struct ContentView: View {
                     }
             }
             VStack {
-                Text("Sit at least " + String(Int(startTime)) + " minutes")
+                (Text("Sit at least ") + Text("\(Int(startTime))").bold() + Text(" minutes"))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.title2)
                 
@@ -54,7 +54,7 @@ struct ContentView: View {
                     }
                 }
                 
-                Text("And up to " + String(Int(endTime)) + " minutes")
+                (Text("And up to ") + Text("\(Int(endTime))").bold() + Text(" minutes"))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.title2)
                 
