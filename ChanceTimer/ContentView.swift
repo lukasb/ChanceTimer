@@ -51,16 +51,12 @@ struct ContentView: View {
                 HStack {
                     Text("1")
                     if (!isScreenBlack) {
-                        Slider(value: $startTime, in: 1...180)
+                        Slider(value: $startTime, in: 1...179)
                             .disabled(isTimerActive)
                             .onChange(of: startTime) {
                                 startTime = Double(Int(startTime.rounded()))
                                 if startTime >= endTime {
-                                    if (endTime == 180) {
-                                        startTime = 179
-                                    } else {
-                                        endTime = startTime + 1
-                                    }
+                                    endTime = startTime + 1
                                 }
                             }
                         Text("180")
@@ -75,16 +71,12 @@ struct ContentView: View {
                 HStack {
                     Text("1")
                     if (!isScreenBlack) {
-                        Slider(value: $endTime, in: 1...180)
+                        Slider(value: $endTime, in: 2...180)
                             .disabled(isTimerActive)
                             .onChange(of: endTime) {
                                 endTime = Double(Int(endTime.rounded()))
                                 if endTime <= startTime {
-                                    if (startTime == 1) {
-                                        endTime = 2
-                                    } else {
-                                        startTime = endTime - 1
-                                    }
+                                    startTime = endTime - 1
                                 }
                             }
                     }
