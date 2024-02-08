@@ -180,6 +180,15 @@ struct ContentView: View {
     }
     
     func playSound() {
+        do {
+                // Configure the audio session for playback, even in silent mode
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                print("Failed to set audio session category: \(error)")
+                return // Exit early if audio session setup fails
+            }
+        
         guard let soundURL = Bundle.main.url(forResource: "bell2", withExtension: "wav") else {
             print("Unable to find bell2.wav file.")
             return
