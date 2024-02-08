@@ -3,6 +3,7 @@ import UserNotifications
 
 // Notification Manager that conforms to UNUserNotificationCenterDelegate
 class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
+    var onNotificationReceived: (() -> Void)?
     override init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self
@@ -10,7 +11,8 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // This will present the notification as an alert and play the sound when the app is in the foreground
-        completionHandler([.banner, .sound])
+        //completionHandler([.banner, .sound])
+        onNotificationReceived?()
     }
 }
 

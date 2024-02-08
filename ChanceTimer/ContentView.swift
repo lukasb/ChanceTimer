@@ -19,6 +19,8 @@ struct ContentView: View {
     @State private var elapsedTime = 0
     @State private var audioPlayer: AVAudioPlayer?
     
+    var notificationManager = NotificationManager()
+    
     var body: some View {
         ZStack {
             if !isScreenBlack {
@@ -116,6 +118,12 @@ struct ContentView: View {
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .onAppear {
+                    // Set up the closure
+                    notificationManager.onNotificationReceived = {
+                        playSound()
+                    }
+                }
     }
     
     func startOrStopTimer() {
@@ -133,8 +141,11 @@ struct ContentView: View {
             elapsedTime = 0
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 elapsedTime += 1
-                if ((elapsedTime >= Int(randomTimeInterval)) && isScreenBlack) {
+                if ((elapsedTime > Int(randomTimeInterval)) && isScreenBlack) {
                     isScreenBlack.toggle()
+                    isTimerActive = false
+                    timer?.invalidate()
+                    timer = nil
                 }
             }
             notificationCenter.requestAuthorization(options: [.alert, .sound]) { granted, error in
