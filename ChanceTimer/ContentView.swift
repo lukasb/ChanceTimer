@@ -8,6 +8,8 @@ func formatElapsedTime(_ seconds: Int) -> String {
     return String(format: "%02d:%02d", minutesPart, secondsPart)
 }
 
+// bell sound from https://freesound.org/people/itsallhappening/sounds/48796/ need to give attribution
+
 struct ContentView: View {
     @State private var isScreenBlack = false
     @State private var startTime = 50.0
@@ -142,7 +144,7 @@ struct ContentView: View {
                     let content = UNMutableNotificationContent()
                     content.title = "Time's Up!"
                     content.body = "Your timer has finished."
-                    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "bell.wav"))
+                    content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: "bell2.wav"))
                     //content.sound = UNNotificationSound.default
                     
                     let trigger = UNTimeIntervalNotificationTrigger(timeInterval: randomTimeInterval, repeats: false)
@@ -169,8 +171,8 @@ struct ContentView: View {
     }
     
     func playSound() {
-        guard let soundURL = Bundle.main.url(forResource: "bell", withExtension: "wav") else {
-            print("Unable to find bell.wav file.")
+        guard let soundURL = Bundle.main.url(forResource: "bell2", withExtension: "wav") else {
+            print("Unable to find bell2.wav file.")
             return
         }
 
