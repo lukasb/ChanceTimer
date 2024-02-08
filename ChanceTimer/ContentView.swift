@@ -95,6 +95,10 @@ struct ContentView: View {
                 
                 if (!isScreenBlack) {
                     Button(action: {
+                        if audioPlayer?.isPlaying == true {
+                            audioPlayer?.stop()
+                            audioPlayer?.currentTime = 0 // Reset playback to start
+                        }
                         self.startOrStopTimer()
                     }) {
                         Text(isTimerActive ? "Stop" : "Start")
