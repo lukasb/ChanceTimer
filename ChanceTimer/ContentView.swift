@@ -1,5 +1,6 @@
 import SwiftUI
 import UserNotifications
+import AVFoundation
 
 func formatElapsedTime(_ seconds: Int) -> String {
     let minutesPart = seconds / 60
@@ -14,6 +15,7 @@ struct ContentView: View {
     @State private var isTimerActive = false
     @State private var timer: Timer?
     @State private var elapsedTime = 0
+    @State private var audioPlayer: AVAudioPlayer?
     
     var body: some View {
         ZStack {
@@ -93,7 +95,7 @@ struct ContentView: View {
                 
                 if (!isScreenBlack) {
                     Button(action: {
-                        self.startRandomTimer()
+                        self.startOrStopTimer()
                     }) {
                         Text(isTimerActive ? "Stop" : "Start")
                             .font(.title)
@@ -110,9 +112,14 @@ struct ContentView: View {
         }
     }
     
-    func startRandomTimer() {
+    func startOrStopTimer() {
         let randomTimeInterval = Double.random(in: (startTime * 60)...(endTime * 60))
         print(String(startTime) + ", " + String(randomTimeInterval) + ", " + String(endTime))
+        
+        if !isTimerActive {
+            self.playSound()
+        }
+        
         isTimerActive.toggle()
         
         let notificationCenter = UNUserNotificationCenter.current()
@@ -154,6 +161,22 @@ struct ContentView: View {
             timer = nil
             notificationCenter.removeAllPendingNotificationRequests()
             print("removed timer")
+        }
+    }
+    
+    func playSound() {
+        guard let soundURL = Bundle.main.url(forResource: "bell", withExtension: "wav") else {
+            print("Unable to find bell.wav file.")
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+            // Prepare to play for reducing the latency
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+        } catch {
+            print("Could not load file: \(error).")
         }
     }
 }
