@@ -17,9 +17,22 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            // Toggle this view to cover the screen in black
+            if !isScreenBlack {
+                Color.clear
+                    .contentShape(Rectangle()) // Makes the entire area tappable
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        if (isTimerActive) {
+                            isScreenBlack = true
+                        }
+                    }
+            }
+
             if isScreenBlack {
                 Color.black.edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        isScreenBlack = false
+                    }
             }
             VStack {
                 Text("Sit at least " + String(Int(startTime)) + " minutes")
@@ -30,6 +43,7 @@ struct ContentView: View {
                     Text("1")
                     if (!isScreenBlack) {
                         Slider(value: $startTime, in: 1...180)
+                            .disabled(isTimerActive)
                             .onChange(of: startTime) {
                                 startTime = Double(Int(startTime.rounded()))
                                 if startTime >= endTime {
@@ -48,6 +62,7 @@ struct ContentView: View {
                     Text("1")
                     if (!isScreenBlack) {
                         Slider(value: $endTime, in: 1...180)
+                            .disabled(isTimerActive)
                             .onChange(of: endTime) {
                                 endTime = Double(Int(endTime.rounded()))
                                 if endTime <= startTime {
@@ -80,16 +95,7 @@ struct ContentView: View {
                 }
             }
             .padding()
-            
-            if (isTimerActive) {
-                Color.clear // This makes the ZStack interactive over the whole screen
-                    .contentShape(Rectangle()) // Defines the tap area as the whole screen
-                    .edgesIgnoringSafeArea(.all)
-                    .onTapGesture {
-                        print("Screen tapped")
-                        isScreenBlack.toggle() // Toggle the black screen state
-                    }
-            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
     
