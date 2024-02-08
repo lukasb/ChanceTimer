@@ -133,10 +133,8 @@ struct ContentView: View {
             elapsedTime = 0
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 elapsedTime += 1
-                if (elapsedTime >= Int(randomTimeInterval)) {
-                    isTimerActive = false;
-                    timer?.invalidate()
-                    timer = nil
+                if ((elapsedTime >= Int(randomTimeInterval)) && isScreenBlack) {
+                    isScreenBlack.toggle()
                 }
             }
             notificationCenter.requestAuthorization(options: [.alert, .sound]) { granted, error in
