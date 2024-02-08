@@ -35,6 +35,9 @@ struct ContentView: View {
                     }
             }
             VStack {
+                
+                Spacer()
+                
                 (Text("Sit at least ") + Text("\(Int(startTime))").bold() + Text(" minutes"))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.title2)
@@ -53,6 +56,7 @@ struct ContentView: View {
                         Text("180")
                     }
                 }
+                .padding(.vertical)
                 
                 (Text("And up to ") + Text("\(Int(endTime))").bold() + Text(" minutes"))
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -72,6 +76,20 @@ struct ContentView: View {
                     }
                     Text("180")
                 }
+                .padding(.vertical)
+                
+                if isTimerActive {
+                    Text(formatElapsedTime(elapsedTime))
+                        .font(.title)
+                        .padding(.top)
+                } else {
+                    Text(" ")
+                        .font(.title)
+                        .opacity(0)
+                        .padding(.top)
+                }
+                
+                Spacer()
                 
                 if (!isScreenBlack) {
                     Button(action: {
@@ -84,14 +102,7 @@ struct ContentView: View {
                             .background(isTimerActive ? Color.red : Color.green)
                             .cornerRadius(40)
                     }
-                }
-                if isTimerActive {
-                    Text(formatElapsedTime(elapsedTime))
-                        .font(.title2)
-                } else {
-                    Text(" ")
-                        .font(.title2)
-                        .opacity(0)
+                    .padding(.bottom)
                 }
             }
             .padding()
