@@ -27,7 +27,13 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 
-                (Text("Sit at least ") + Text("\(Int(startTime))").bold() + Text(" minutes"))
+                Group {
+                        if Int(startTime) == 1 {
+                            (Text("Sit at least ") + Text("1").bold() + Text(" minute"))
+                        } else {
+                            (Text("Sit at least ") + Text("\(Int(startTime))").bold() + Text(" minutes"))
+                        }
+                    }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .font(.title2)
                 
