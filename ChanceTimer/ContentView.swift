@@ -23,25 +23,8 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            if !isScreenBlack {
-                Color.clear
-                    .contentShape(Rectangle()) // Makes the entire area tappable
-                    .edgesIgnoringSafeArea(.all)
-                    .onTapGesture {
-                        if (isTimerActive) {
-                            isScreenBlack = true
-                        }
-                    }
-            }
-
-            if isScreenBlack {
-                Color.black.edgesIgnoringSafeArea(.all)
-                    .onTapGesture {
-                        isScreenBlack = false
-                    }
-            }
+            // Main content
             VStack {
-                
                 Spacer()
                 
                 (Text("Sit at least ") + Text("\(Int(startTime))").bold() + Text(" minutes"))
@@ -96,36 +79,59 @@ struct ContentView: View {
                 }
                 
                 Spacer()
-                
-                if (!isScreenBlack) {
-                    Button(action: {
-                        if audioPlayer?.isPlaying == true {
-                            audioPlayer?.stop()
-                            audioPlayer?.currentTime = 0 // Reset playback to start
-                        }
-                        self.startOrStopTimer()
-                    }) {
-                        Text(isTimerActive ? "Stop" : "Start")
-                            .font(.title)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(isTimerActive ? Color.red : Color.green)
-                            .cornerRadius(40)
-                    }
-                    .padding(.bottom)
-                }
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-        .onAppear {
-                    // Set up the closure
-                    notificationManager.onNotificationReceived = {
-                        playSound()
-                        startOrStopTimer()
+            
+            // Clear tappable area
+            if !isScreenBlack && isTimerActive {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        isScreenBlack = true
+                    }
+            }
+            
+            // Black screen layer
+            if isScreenBlack {
+                Color.black
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
                         isScreenBlack = false
                     }
+            }
+            
+            // Start/Stop button
+            VStack {
+                Spacer()
+                Button(action: {
+                    if audioPlayer?.isPlaying == true {
+                        audioPlayer?.stop()
+                        audioPlayer?.currentTime = 0 // Reset playback to start
+                    }
+                    self.startOrStopTimer()
+                }) {
+                    Text(isTimerActive ? "Stop" : "Start")
+                        .font(.title)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(isTimerActive ? Color.red : Color.green)
+                        .cornerRadius(40)
                 }
+                .opacity(isScreenBlack ? 0 : 1) // Hide button when screen is black
+                .animation(.easeInOut, value: isScreenBlack) // Smooth transition
+                .disabled(isScreenBlack) // Disable button when screen is black
+                .padding(.bottom, 20)
+            }
+        }
+        .onAppear {
+            notificationManager.onNotificationReceived = {
+                playSound()
+                startOrStopTimer()
+                isScreenBlack = false
+            }
+        }
     }
     
     func startOrStopTimer() {
