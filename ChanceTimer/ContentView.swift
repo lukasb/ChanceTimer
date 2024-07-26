@@ -132,6 +132,9 @@ struct ContentView: View {
                 isScreenBlack = false
             }
         }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+        }
     }
     
     func startOrStopTimer() {
