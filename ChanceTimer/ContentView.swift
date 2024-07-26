@@ -11,9 +11,9 @@ func formatElapsedTime(_ seconds: Int) -> String {
 // bell sound from https://freesound.org/people/itsallhappening/sounds/48796/ need to give attribution
 
 struct ContentView: View {
+    @AppStorage("startTime") private var startTime = 45.0
+    @AppStorage("endTime") private var endTime = 75.0
     @State private var isScreenBlack = false
-    @State private var startTime = 50.0
-    @State private var endTime = 70.0
     @State private var isTimerActive = false
     @State private var timer: Timer?
     @State private var elapsedTime = -1
