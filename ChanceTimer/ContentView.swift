@@ -16,7 +16,7 @@ struct ContentView: View {
     @State private var endTime = 70.0
     @State private var isTimerActive = false
     @State private var timer: Timer?
-    @State private var elapsedTime = 0
+    @State private var elapsedTime = -1
     @State private var audioPlayer: AVAudioPlayer?
     
     var notificationManager = NotificationManager()
@@ -84,7 +84,7 @@ struct ContentView: View {
                 }
                 .padding(.vertical)
                 
-                if isTimerActive {
+                if elapsedTime != -1 {
                     Text(formatElapsedTime(elapsedTime))
                         .font(.title)
                         .padding(.top)
@@ -122,6 +122,7 @@ struct ContentView: View {
                     // Set up the closure
                     notificationManager.onNotificationReceived = {
                         playSound()
+                        startOrStopTimer()
                     }
                 }
     }
@@ -130,14 +131,12 @@ struct ContentView: View {
         let randomTimeInterval = Double.random(in: (startTime * 60)...(endTime * 60))
         print(String(startTime) + ", " + String(randomTimeInterval) + ", " + String(endTime))
         
-        if !isTimerActive {
-            self.playSound()
-        }
-        
         isTimerActive.toggle()
         
         let notificationCenter = UNUserNotificationCenter.current()
         if isTimerActive {
+            self.playSound()
+            UIApplication.shared.isIdleTimerDisabled = true
             elapsedTime = 0
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
                 elapsedTime += 1
@@ -172,6 +171,7 @@ struct ContentView: View {
                 }
             }
         } else {
+            UIApplication.shared.isIdleTimerDisabled = false
             timer?.invalidate()
             timer = nil
             notificationCenter.removeAllPendingNotificationRequests()
