@@ -123,6 +123,7 @@ struct ContentView: View {
                     notificationManager.onNotificationReceived = {
                         playSound()
                         startOrStopTimer()
+                        isScreenBlack = false
                     }
                 }
     }
